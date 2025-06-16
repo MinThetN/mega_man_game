@@ -78,7 +78,7 @@ public class Scene1 extends JPanel {
         g.setColor(Color.black);
         g.fillRect(0, 0, d.width, d.height);
         g.setColor(Color.white);
-    
+
         if (inGame) {
             // Draw the ground line
             g.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
@@ -88,7 +88,7 @@ public class Scene1 extends JPanel {
                 timer.stop();
             }
         }
-    
+
         Toolkit.getDefaultToolkit().sync();
     }
 

@@ -80,7 +80,6 @@ public class Player extends Sprite {
 
     // Add these variables at the class level
     private int jumpCount = 0;
-    private static final int MAX_JUMP_COUNT = 2;
     private boolean isJumping = false;
 
     public void act() {
@@ -160,21 +159,33 @@ public class Player extends Sprite {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_LEFT) {
-            if (action != ACT_RUNNING) {
-                // Change of action
+            if (action != ACT_RUNNING && action != ACT_JUMPING) {
+                // Change of action only if not jumping
                 frame = 0;
+                action = ACT_RUNNING;
             }
-            action = ACT_RUNNING;
             facing = DIR_LEFT;
             dx = -2;
-        } else if (key == KeyEvent.VK_RIGHT) {
-            if (action != ACT_RUNNING) {
-                // Change of action
-                frame = 0;
+
+            // If already jumping, just change direction but keep jumping action
+            if (action == ACT_JUMPING) {
+                // Keep the jumping action but change horizontal direction
+                dx = -2;
             }
-            action = ACT_RUNNING;
+        } else if (key == KeyEvent.VK_RIGHT) {
+            if (action != ACT_RUNNING && action != ACT_JUMPING) {
+                // Change of action only if not jumping
+                frame = 0;
+                action = ACT_RUNNING;
+            }
             facing = DIR_RIGHT;
             dx = 2;
+
+            // If already jumping, just change direction but keep jumping action
+            if (action == ACT_JUMPING) {
+                // Keep the jumping action but change horizontal direction
+                dx = 2;
+            }
         } else if (key == KeyEvent.VK_SPACE) {
             // Handle jumping with space bar
             if (!isJumping) {
@@ -183,19 +194,12 @@ public class Player extends Sprite {
                 dy = -15;
                 isJumping = true;
                 jumpCount = 1;
-            } else if (isJumping && jumpCount < MAX_JUMP_COUNT) {
-                // Second jump (higher)
-                dy = -20;
-                jumpCount = MAX_JUMP_COUNT; // Prevent more jumps
             }
         }
     }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-
-        // Store original x position if jumping
-        int originalX = x;
 
         if (key == KeyEvent.VK_LEFT) {
             if (action != ACT_STANDING && action != ACT_JUMPING) {
