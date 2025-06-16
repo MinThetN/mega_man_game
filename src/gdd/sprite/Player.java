@@ -81,38 +81,78 @@ public class Player extends Sprite {
     // Add these variables at the class level
     private int jumpCount = 0;
     private boolean isJumping = false;
+    private boolean isFireKeyDown = false; // New variable to track if fire key is held down
+
+    // Add these variables for shooting (keep the existing isFiring variable)
+    private int firingTimer = 0;
+    private static final int FIRING_DURATION = 20; // Duration of firing animation
 
     public void act() {
         System.out.printf("Player action=%d frame=%d facing=%d\n", action, frame, facing);
 
         frame++;
 
+        // Update firing timer if player is firing
+        if (isFiring) {
+            firingTimer++;
+            if (firingTimer >= FIRING_DURATION) {
+                isFiring = false;
+                firingTimer = 0;
+                
+                // If fire key is still being held down, start firing again
+                if (isFireKeyDown) {
+                    isFiring = true;
+                }
+            }
+        }
+
         switch (action) {
             case ACT_STANDING:
-                if (clipNo == 1 && frame > 5) { // blink only one frame
-                    frame = 0;
-                    clipNo = 0;
-                }
-                if (frame > 40) { // blink
-                    frame = 0;
-                    clipNo = 1; // blink
+                if (isFiring) {
+                    clipNo = 7; // standing shoot
+                } else {
+                    if (clipNo == 1 && frame > 5) { // blink only one frame
+                        frame = 0;
+                        clipNo = 0;
+                    }
+                    if (frame > 40) { // blink
+                        frame = 0;
+                        clipNo = 1; // blink
+                    }
                 }
                 // Reset jump state when standing
                 isJumping = false;
                 jumpCount = 0;
                 break;
+
             case ACT_RUNNING:
-                if (frame <= 10) {
-                    clipNo = 3;
-                } else if (frame <= 20) {
-                    clipNo = 2;
-                } else if (frame <= 30) {
-                    clipNo = 3;
-                } else if (frame <= 40) {
-                    clipNo = 4;
+                if (isFiring) { // running and shooting animation
+                    if (frame <= 10) {
+                        clipNo = 8; // run shoot 1
+                    } else if (frame <= 20) {
+                        clipNo = 9; // run shoot 2
+                    } else if (frame <= 30) {
+                        clipNo = 8; // run shoot 3
+                    } else if (frame <= 40) {
+                        clipNo = 10; // run shoot 4
+                    } else {
+                        clipNo = 8; // run shoot 1
+                        frame = 0;
+                    }
                 } else {
-                    clipNo = 3;
-                    frame = 0;
+                    // Normal running animation
+                    if (frame <= 10) {
+                        clipNo = 3;
+                    } else if (frame <= 20) {
+                        clipNo = 2;
+                    } else if (frame <= 30) {
+                        clipNo = 3;
+                    } else if (frame <= 40) {
+                        clipNo = 4;
+                    } else {
+                        clipNo = 3;
+                        frame = 0;
+                    }
                 }
                 // Reset jump state when running
                 isJumping = false;
@@ -120,9 +160,9 @@ public class Player extends Sprite {
                 break;
             case ACT_JUMPING:
                 if (isFiring) {
-                    clipNo = 6;
+                    clipNo = 6; // jump firing
                 } else {
-                    clipNo = 5;
+                    clipNo = 5; // normal jump
                 }
                 break;
         }
@@ -138,7 +178,7 @@ public class Player extends Sprite {
             if (y >= GROUND) {
                 y = GROUND; // Return to ground position
                 dy = 0;
-                
+
                 // Check if player is moving horizontally when landing
                 if (dx != 0) {
                     // If moving, set action to running
@@ -151,7 +191,7 @@ public class Player extends Sprite {
                     frame = 0;
                     clipNo = 0;
                 }
-                
+
                 isJumping = false;
                 jumpCount = 0;
             }
@@ -205,6 +245,14 @@ public class Player extends Sprite {
                 isJumping = true;
                 jumpCount = 1;
             }
+        } else if (key == KeyEvent.VK_F) {
+            // Handle shooting with F key
+            isFireKeyDown = true;
+            isFiring = true;
+            firingTimer = 0;
+
+            // Create a bullet here if you want to implement actual projectiles
+            // For now, we'll just set the firing animation
         }
     }
 
@@ -244,5 +292,14 @@ public class Player extends Sprite {
                 dx = 0;
             }
         }
+
+        if (key == KeyEvent.VK_F) {
+            // Stop continuous firing when F key is released
+            isFireKeyDown = false;
+            // Note: We don't immediately stop firing animation
+            // It will complete its current cycle based on the timer
+        }
+        // Note: We don't reset isFiring on key release because we want the animation
+        // to complete based on the timer
     }
 }
