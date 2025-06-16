@@ -138,9 +138,20 @@ public class Player extends Sprite {
             if (y >= GROUND) {
                 y = GROUND; // Return to ground position
                 dy = 0;
-                action = ACT_STANDING;
-                frame = 0;
-                clipNo = 0;
+                
+                // Check if player is moving horizontally when landing
+                if (dx != 0) {
+                    // If moving, set action to running
+                    action = ACT_RUNNING;
+                    frame = 0;
+                    clipNo = 3; // Start with running animation frame
+                } else {
+                    // If not moving, set action to standing
+                    action = ACT_STANDING;
+                    frame = 0;
+                    clipNo = 0;
+                }
+                
                 isJumping = false;
                 jumpCount = 0;
             }
@@ -189,9 +200,8 @@ public class Player extends Sprite {
         } else if (key == KeyEvent.VK_SPACE) {
             // Handle jumping with space bar
             if (!isJumping) {
-                // First jump
                 action = ACT_JUMPING;
-                dy = -15;
+                dy = -18;
                 isJumping = true;
                 jumpCount = 1;
             }
@@ -211,9 +221,9 @@ public class Player extends Sprite {
             facing = DIR_LEFT;
             dx = 0;
 
-            // If jumping, make sure we'll land at original position
+            // If jumping, make sure player will land at original position
             if (action == ACT_JUMPING) {
-                // We keep the jumping action but stop horizontal movement
+                // Player will keep the jumping action but stop horizontal movement
                 dx = 0;
             }
         }
