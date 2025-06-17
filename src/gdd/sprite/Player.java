@@ -250,7 +250,7 @@ public class Player extends Sprite {
             isFiring = true;
             firingTimer = 0;
 
-            // Create a bullet here if you want to implement actual projectiles
+            // Create a bullet here
         }
     }
 
@@ -284,9 +284,9 @@ public class Player extends Sprite {
             facing = DIR_RIGHT;
             dx = 0;
 
-            // If jumping, make sure we'll land at original position
+            // If jumping, make sure player will land at original position
             if (action == ACT_JUMPING) {
-                // We keep the jumping action but stop horizontal movement
+                // keep the jumping action but stop horizontal movement
                 dx = 0;
             }
         }
@@ -294,10 +294,6 @@ public class Player extends Sprite {
         if (key == KeyEvent.VK_F) {
             // Stop continuous firing when F key is released
             isFireKeyDown = false;
-            // Note: We don't immediately stop firing animation
-            // It will complete its current cycle based on the timer
         }
-        // Note: We don't reset isFiring on key release because we want the animation
-        // to complete based on the timer
     }
 }
