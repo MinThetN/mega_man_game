@@ -10,7 +10,6 @@ import javax.swing.ImageIcon;
 public class Player extends Sprite {
 
     private static final int START_X = 100;
-    private static final int START_Y = 500;
     // private int width;
     private int frame = 0;
     private boolean isFiring = false;
@@ -98,7 +97,7 @@ public class Player extends Sprite {
             if (firingTimer >= FIRING_DURATION) {
                 isFiring = false;
                 firingTimer = 0;
-                
+
                 // If fire key is still being held down, start firing again
                 if (isFireKeyDown) {
                     isFiring = true;
@@ -252,7 +251,6 @@ public class Player extends Sprite {
             firingTimer = 0;
 
             // Create a bullet here if you want to implement actual projectiles
-            // For now, we'll just set the firing animation
         }
     }
 

@@ -48,17 +48,19 @@ public class Scene1 extends JPanel {
 
     private void drawPlayer(Graphics g) {
         if (player.isVisible()) {
+            int centerX = player.getX() - player.getWidth() / 2; // Calculate center position
+            
             if (player.getFacing() == Player.DIR_RIGHT) {
-                g.drawImage(player.getImage(), player.getX(), player.getY() - player.getHeight(), player.getWidth(),
+                g.drawImage(player.getImage(), centerX, player.getY() - player.getHeight(), player.getWidth(),
                         player.getHeight(), this);
             } else {
-                g.drawImage(player.getImage(), player.getX() + player.getWidth(), player.getY() - player.getHeight(),
+                g.drawImage(player.getImage(), centerX + player.getWidth(), player.getY() - player.getHeight(),
                         -player.getWidth(), player.getHeight(), this);
             }
-            // g.drawImage(player.getImage(), player.getX(),
-            // player.getY()-player.getHeight(), this);
-            g.drawRect(player.getX(), player.getY(), 10, 10);
-            g.drawRect(player.getX(), player.getY() - player.getHeight(), player.getWidth(), player.getHeight());
+            
+            // Debug visualization
+            g.drawRect(player.getX() - 5, player.getY() - 5, 10, 10); // Draw center point
+            g.drawRect(centerX, player.getY() - player.getHeight(), player.getWidth(), player.getHeight()); // Draw bounding box
             g.drawString("Frame# " + player.getFrame(), 10, 10);
         }
     }
